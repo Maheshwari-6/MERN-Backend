@@ -1,0 +1,46 @@
+body {
+  margin: 5%;
+}
+
+#exampleInputEmail1,
+#exampleInputPassword1,
+#exampleInputName {
+  width: 100%;
+}
+
+#log {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-home {
+}
+.loginLogout {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.user-list {
+  /* border: solid 1px red; */
+}
+
+.header {
+  text-align: center;
+}
+.add-comment-form {
+  border-bottom: solid 1px red;
+}
+.submit {
+  margin-top: 10px;
+  background-color: rgb(244, 185, 36);
+  color: white;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.logout {
+ margin-left: 20px;
+}
+.see-more{
+    border-bottom: solid 1px red;
+    margin-bottom: 10px;
+}

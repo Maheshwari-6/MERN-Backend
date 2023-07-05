@@ -42,7 +42,7 @@ const updateQuestion = (req, res) => {
   question
     .findByIdAndUpdate(req.params.id, req.body)
     .then((result) => {
-      res.redirect(`/question/${result._id}`);
+      res.send(result);
     })
     .catch((err) => console.log(err));
 };

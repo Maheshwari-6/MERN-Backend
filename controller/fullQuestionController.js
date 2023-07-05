@@ -52,7 +52,7 @@ const deleteQuestion = (req, res) => {
   question
     .findByIdAndDelete(req.params.id)
     .then(() => {
-      res.redirect("/");
+      res.send("deleted");
     })
     .catch((err) => {
       console.log(err);

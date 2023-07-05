@@ -52,7 +52,7 @@ const deleteQuestion = (req, res) => {
   question
     .findByIdAndDelete(req.params.id)
     .then(() => {
-      res.redirect("/");
+      res.send("deleted");
     })
     .catch((err) => {
       console.log(err);
@@ -71,7 +71,19 @@ const addComment = (req, res) => {
     .then((result) => {
       question.findById(req.params.id).then((foundQuestion) => {
         foundQuestion.comments.push(result);
-        foundQuestion.save().then(res.redirect(`/question/${req.params.id}`));
+        foundQuestion.save().then(() => {
+          question.findById(req.params.id)
+          .populate('userId')
+          .populate({path: 'comments', populate: {path: 'userId'}})
+          .then((result) => {
+            res.send({
+              question: {
+                ...result._doc,
+                formattedDate: moment(result.createdAt).format("YYYY-MM-DD"),
+              },
+            });
+          })
+        });
       });
     })
     .catch((err) => console.log(err));
@@ -81,7 +93,17 @@ const addComment = (req, res) => {
 const deleteComment = (req, res) => {
   comment.findByIdAndDelete(req.params.id)
     .then(() => {
-      res.redirect(`/question/${req.params.question}`);
+      question.findById(req.params.question)
+      .populate('userId')
+      .populate({path: 'comments', populate: {path: 'userId'}})
+      .then((result) => {
+        res.send({
+          question: {
+            ...result._doc,
+            formattedDate: moment(result.createdAt).format("YYYY-MM-DD"),
+          },
+        });
+      })
     })
     .catch((err) => {
       console.log(err);

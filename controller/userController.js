@@ -9,7 +9,7 @@ const axios = require('axios');
 const homePage = (req, res) => {
     // console.log(req.headers.userToken)
     user.find()
-    //.sort({create_at : '-1'})
+    .sort({createdAt : '-1'})
     //.then((result) => {res.render('homePage', {question : result})})
     .then((result) => {res.send(result)})
     .catch(err => console.log(err))   
@@ -71,7 +71,11 @@ const addAnswerToQuestion = (req, res) => {
     })
 }
 
-
+const askChatGpt = (req, res) => {
+    chatWithOpenAI(req.body.desc).then(chatGPTReply => {
+        res.send({chatGPTReply})
+    }).catch(() => res.status(500))
+}
 
 const chatWithOpenAI = async (question) => {
     try {
@@ -167,4 +171,5 @@ module.exports = {
     questionAdditionChat,
     postQuestionChatGPT,
     addAnswerToQuestion,
+    askChatGpt,
 }

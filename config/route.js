@@ -44,6 +44,7 @@ route.post('/question/:question/delete-comment/:id', auth.checkUserToken, fullQu
 
 //Accept chatgpt answer
 route.post('/question/:id/answer', auth.checkUserToken, userController.addAnswerToQuestion)
+route.post('/askChatGpt', auth.checkUserToken, userController.askChatGpt)
 
 
 

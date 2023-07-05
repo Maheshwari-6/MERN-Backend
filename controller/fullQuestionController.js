@@ -9,7 +9,7 @@ const getQuestionDetails = (req, res) => {
     .populate({path: 'comments', populate: {path: 'userId'}})
     .then((result) => {
       console.log(result)
-      res.render("fullQuestionAndComments", {
+      res.send({
         question: {
           ...result._doc,
           formattedDate: moment(result.createdAt).format("YYYY-MM-DD"),

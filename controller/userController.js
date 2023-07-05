@@ -6,7 +6,8 @@ const axios = require('axios');
 
 
 
-const homePage = (req, res) => { 
+const homePage = (req, res) => {
+    // console.log(req.headers.userToken)
     user.find()
     //.sort({create_at : '-1'})
     //.then((result) => {res.render('homePage', {question : result})})
@@ -39,8 +40,11 @@ const postQuestion = (req,res) =>{
         userId: res.locals.userId
       });
     newUser.save()
-    .then((result) => res.redirect('/'))
-    .catch(err => res.render('addQuestion'))
+    .then((result) => res.send(result))
+    .catch(err => {
+        res.status(500)
+        res.send(err)
+    })
 }
 
 const postQuestionChatGPT = (req,res) =>{
@@ -98,14 +102,13 @@ const chatWithOpenAI = async (question) => {
  
 
 const signUp = async (req, res) => {
+    console.log(req.body)
     //Check if the user is already in the DB 
     let existedUser = await signupModel.findOne({email: req.body.email});
 
     if(existedUser) {
-        res.render('outh', {
-            error: "user exist",
-            success: ""
-        })
+        res.status(409)
+        res.send('user already exists')
     }else{
         let hashedPass = bcrypt.hashSync(req.body.password, 12)
         
@@ -116,9 +119,10 @@ const signUp = async (req, res) => {
 
         let newUser = new signupModel(userObj);
         newUser.save()
-        .then( () => {
+        .then( (user) => {
+            console.log(user)
             res.locals.success = "User has been added";
-            res.redirect('/');
+            res.send('user');
         })
         .catch( (err) => {
             throw err
@@ -131,23 +135,18 @@ const logIn = async (req, res) => {
     let existedUser = await signupModel.findOne({email: req.body.email});
     
     if(!existedUser) {
-     res.render('outh', {
-
-         error : "user is not exist. So signup first please!",
-         
-     })
+        res.status(404)
+        res.send('user not found')
      }else{
      let isCorrectPass = bcrypt.compareSync(req.body.password, existedUser.password)
  
      if(!isCorrectPass){
-      res.render('outh', {
-             error : "user password is not correct"
-
-         })  
+        res.status(401)
+        res.send('incorrect password');  
      }else{
          let userToken = jwt.sign({existedUser}, process.env.JWT_TEXT);
          res.cookie("userToken", userToken, {httpOnly: true});
-         res.redirect('/')
+         res.send(({ userToken, username: existedUser.userName, userId: existedUser._id }))
      }
      }
     }

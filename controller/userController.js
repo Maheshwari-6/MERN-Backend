@@ -9,6 +9,7 @@ const axios = require('axios');
 const homePage = (req, res) => {
     // console.log(req.headers.userToken)
     user.find()
+    .populate('userId')
     .sort({createdAt : '-1'})
     //.then((result) => {res.render('homePage', {question : result})})
     .then((result) => {res.send(result)})
